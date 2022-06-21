@@ -1,0 +1,56 @@
+<body  class="hold-transition login-page">
+
+
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a class="h1"><b>B2B</b></a>
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg">Giriş yapmak için bilgileri doldurun</p>
+
+      <form #loginForm="ngForm">
+        <div class="input-group mb-3">
+          <input
+            type="email"
+            class="form-control"
+            required
+            email
+            placeholder="Email"
+            ngModel
+            name="email">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input
+            type="password"
+            class="form-control"
+            required
+            placeholder="Password"
+            ngModel
+            name="password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <button type="submit" [disabled]="!loginForm.valid" (click)="login(loginForm.value)" class="btn btn-primary btn-block">Giriş Yap</button>
+      </form>
+      <!-- /.social-auth-links -->
+
+      <p class="mb-1">
+        <a href="forgot-password.html">Şifremi unuttum</a>
+      </p>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+
+</body>
