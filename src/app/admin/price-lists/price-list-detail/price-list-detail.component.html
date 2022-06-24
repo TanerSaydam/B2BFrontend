@@ -4,12 +4,13 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Ürünler</h1>
+          <h1>Fiyat Listesi Detayı</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a routerLink="/admin">Ana Sayfa</a></li>
-            <li class="breadcrumb-item active">Ürünler</li>
+            <li class="breadcrumb-item"><a routerLink="/price-lists">Fiyat Listeleri</a></li>
+            <li class="breadcrumb-item active">Fiyat Listesi Detayı</li>
           </ol>
         </div>
       </div>
@@ -22,7 +23,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Ürün Listesi</h3>
+        <h3 class="card-title">Fiyat Listesi Detayı</h3>
 
         <div class="card-tools">
           <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -37,7 +38,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productAddModel">Ürün Ekle</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModel">Ürün Ekle</button>
             <button class="btn btn-info mx-2" (click)="exportExcel()">Excel'e Aktar</button>
           </div>
           <div class="col-md-6">
@@ -60,25 +61,22 @@
             <tr>
               <th>#</th>
               <th>Ürün Adı</th>
-              <th>Ürün Resmi</th>
+              <th>Ürün Fiyatı</th>
               <th>İşlemler</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let product of products
-            | productPipe: filterText
+            <tr *ngFor="let priceListDetail of priceListDetails
+            | priceListDetailPipe: filterText
             let index = index">
               <td [innerText]="index + 1"></td>
+              <td [innerText]="priceListDetail.productName"></td>
               <td>
-                <a [innerText]="product.name" routerLink="/admin/products/{{ product.id }}/images" class="btn btn-default">
-                </a>
+                <input type="text" autocomplete="off" [(ngModel)]="priceListDetail.price" [ngModelOptions]="{standalone: true}" class="form-control">
               </td>
               <td>
-                <img [src]="product.mainImageUrl == '' ? './assets/img/notfound.jpeg' : './assets/img/' + product.mainImageUrl" alt="">
-              </td>
-              <td>
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#productUpdateModel" (click)="getProduct(product)">Ürün Güncelle</button>
-                <button class="btn btn-danger mx-2" [swal]="deleteSwal" (confirm)="delete(product)">Sil</button>
+                <button class="btn btn-warning" (click)="update(priceListDetail)">Güncelle</button>
+                <button class="btn btn-danger mx-2" [swal]="deleteSwal" (confirm)="delete(priceListDetail)">Sil</button>
               </td>
             </tr>
           </tbody>
@@ -89,7 +87,7 @@
 </div>
 
 
-<div class="modal fade" id="productAddModel" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addModel" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -100,36 +98,19 @@
         <form #addForm="ngForm">
         <div class="form-group">
           <label for="exampleInputEmail1">Ürün Adı</label>
-          <input type="text" class="form-control" ngModel name="productName" #productName required minlength="3" placeholder="Ürün adı">
+          <select class="form-control" ngModel name="productId" #productId required>
+            <option [value]="product.id" *ngFor="let product of products" [innerText]="product.name"></option>
+          </select>
         </div>
-      </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="add(addForm)">Ürünü Ekle</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="productUpdateModel" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ürün Güncelle</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form #updateForm="ngForm">
         <div class="form-group">
-          <label for="exampleInputEmail1">Ürün Adı</label>
-          <input type="text" class="form-control" [(ngModel)]="product.name" [ngModelOptions]="{standalone: true}" name="productName" #productName required minlength="3" placeholder="Ürün adı">
+          <label for="exampleInputEmail1">Fiyatı</label>
+          <input type="text" class="form-control" ngModel name="price" #price required min="0" placeholder="Fiyatı">
         </div>
       </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="update()">Ürünü Güncelle</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updateModelCloseBtn">Kapat</button>
+        <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="add(addForm)">Ürün Ekle</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
       </div>
     </div>
   </div>
@@ -139,7 +120,7 @@
 <swal
   #deleteSwal
   title="Sil?"
-  text="Ürünü silmek istiyor musunuz?"
+  text="Ürün fiyatını silmek istiyor musunuz?"
   type="question"
   [showCancelButton]="true"
   [focusCancel]="true"

@@ -1,0 +1,178 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Müşteriler</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a routerLink="/admin">Ana Sayfa</a></li>
+            <li class="breadcrumb-item active">Müşteriler</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Müşteriler</h3>
+
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModel">Müşteri Ekle</button>
+            <button class="btn btn-info mx-2" (click)="exportExcel()">Excel'e Aktar</button>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group offset-6">
+              <input
+                class="form-control"
+                type="search"
+                [(ngModel)]="filterText"
+                [ngModelOptions]="{standalone: true}"
+                placeholder="Aranacak kelime"
+                aria-label="Aranacak kelime">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <table class="table table-hovered" id="excel-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Müşteri Adı</th>
+              <th>Mail Adresi</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let customer of customers
+            | customerPipe: filterText
+            let index = index">
+              <td [innerText]="index + 1"></td>
+              <td [innerText]="customer.name"></td>
+              <td [innerText]="customer.email"></td>
+              <td>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModel" (click)="getCustomer(customer)">Müşteri Güncelle</button>
+                <button class="btn btn-info mx-2" data-bs-toggle="modal" data-bs-target="#updatePasswordModel" (click)="getCustomer(customer)">Müşteri Şifre Güncelle</button>
+                <button class="btn btn-danger mx-2" [swal]="deleteSwal" (confirm)="delete(customer)">Sil</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<div class="modal fade" id="addModel" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Müşteri Ekle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Müşteri Adı</label>
+          <input type="text" class="form-control" ngModel name="name" #name required minlength="3" placeholder="Müşteri adı">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Mail Adresi</label>
+          <input type="email" class="form-control" ngModel name="email" #email required email placeholder="Mail adresi">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Şifre</label>
+          <input type="password" class="form-control" ngModel name="password" #password required>
+        </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="add(addForm)">Müşteri Ekle</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updateModel" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Müşteri Güncelle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #updateForm="ngForm">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Müşteri Adı</label>
+            <input type="text" class="form-control" [(ngModel)]="customer.name" [ngModelOptions]="{standalone: true}" name="name" #name required minlength="3" placeholder="Müşteri adı">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Mail Adresi</label>
+            <input type="email" class="form-control" [(ngModel)]="customer.email" [ngModelOptions]="{standalone: true}" name="email" #email required email placeholder="Mail adresi">
+          </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="update()">Müşteri Güncelle</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updateModelCloseBtn">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updatePasswordModel" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Müşteri Şifre Güncelle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #updateForm="ngForm">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Şifre</label>
+            <input type="password" class="form-control" ngModel name="password" #password required>
+          </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="changePassowrd(password)">Müşteri Şifre Güncelle</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updatePasswordModelCloseBtn">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<swal
+  #deleteSwal
+  title="Sil?"
+  text="Müşteriyi silmek istiyor musunuz?"
+  type="question"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  [swalOptions]="{ confirmButtonText: 'Sil', cancelButtonText: 'Vazgeç' }"
+  ></swal>

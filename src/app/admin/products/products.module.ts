@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProductPipe } from './pipe/product.pipe';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { ProductImagesModule } from './product-images/product-images.module';
 
 const routes: Routes = [
   {
@@ -22,10 +23,12 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
-    SweetAlert2Module.forRoot()
+    SweetAlert2Module.forRoot(),
+    ProductImagesModule
   ],
   exports: [
-    ProductsComponent
+    ProductsComponent,
+    ProductImagesModule
   ]
 })
 export class ProductsModule { }
