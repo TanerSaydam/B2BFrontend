@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ErrorService } from 'src/app/services/error.service';
 import { HelperService } from 'src/app/services/helper.service';
 import { PriceListModel } from '../price-lists/model/price-list-model';
+import { PriceListService } from '../price-lists/service/price-list.service';
+import { CustomerRelationshipModel } from './model/customer-relationship-model';
 import { CustomerModel } from './model/customer.model';
 import { CustomerService } from './service/customer.service';
 
@@ -15,6 +17,7 @@ import { CustomerService } from './service/customer.service';
 export class CustomersComponent implements OnInit {
 
   customers: CustomerModel[] = [];
+  priceLists: PriceListModel[] = [];
   customer: CustomerModel = new CustomerModel();
 
   filterText: string = "";
@@ -23,11 +26,13 @@ export class CustomersComponent implements OnInit {
     private customerService: CustomerService,
     private errorService: ErrorService,
     private toastr: ToastrService,
-    private helperService: HelperService
+    private helperService: HelperService,
+    private priceListService: PriceListService
   ) { }
 
   ngOnInit(): void {
     this.getList();
+    this.getPriceList();
   }
 
   exportExcel(){
@@ -39,6 +44,15 @@ export class CustomersComponent implements OnInit {
   getList(){
     this.customerService.getList().subscribe((res: any)=>{
       this.customers = res.data;
+      console.log(res.data)
+    },(err)=>{
+      this.errorService.errorHandler(err);
+    });
+  }
+
+  getPriceList(){
+    this.priceListService.getList().subscribe((res: any)=>{
+      this.priceLists = res.data;
     },(err)=>{
       this.errorService.errorHandler(err);
     });
@@ -70,7 +84,7 @@ export class CustomersComponent implements OnInit {
 
 
   getCustomer(customer: CustomerModel){
-    this.customerService.getById(customer.id).subscribe((res: any)=>{
+    this.customerService.getDtoById(customer.id).subscribe((res: any)=>{
       this.customer = res.data;
     },(err)=>{
       this.errorService.errorHandler(err);
@@ -82,6 +96,21 @@ export class CustomersComponent implements OnInit {
       this.toastr.success(res.message);
       this.getList();
       document.getElementById("updateModelCloseBtn").click();
+    },(err)=>{
+      this.errorService.errorHandler(err);
+    });
+  }
+
+  updateReleationship(){
+    let model: CustomerRelationshipModel = new CustomerRelationshipModel();
+    model.customerId = this.customer.id;
+    model.priceListId = this.customer.priceListId;
+    model.discount = this.customer.discount;
+
+    this.customerService.updateRelationship(model).subscribe((res: any)=>{
+      this.toastr.info(res.message);
+      this.getList();
+      document.getElementById("updateRelationshipModelCloseBtn").click();
     },(err)=>{
       this.errorService.errorHandler(err);
     });

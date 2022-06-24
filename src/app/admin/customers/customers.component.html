@@ -61,6 +61,8 @@
               <th>#</th>
               <th>Müşteri Adı</th>
               <th>Mail Adresi</th>
+              <th>Fiyat Listesi</th>
+              <th>İskonto Oranı</th>
               <th>İşlemler</th>
             </tr>
           </thead>
@@ -71,8 +73,11 @@
               <td [innerText]="index + 1"></td>
               <td [innerText]="customer.name"></td>
               <td [innerText]="customer.email"></td>
+              <td [innerText]="customer.priceListName"></td>
+              <td [innerText]="customer.discount"></td>
               <td>
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModel" (click)="getCustomer(customer)">Müşteri Güncelle</button>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#updateRelationshipModel" (click)="getCustomer(customer)">Bağlantı Ayarla</button>
+                <button class="btn btn-warning mx-2" data-bs-toggle="modal" data-bs-target="#updateModel" (click)="getCustomer(customer)">Müşteri Güncelle</button>
                 <button class="btn btn-info mx-2" data-bs-toggle="modal" data-bs-target="#updatePasswordModel" (click)="getCustomer(customer)">Müşteri Şifre Güncelle</button>
                 <button class="btn btn-danger mx-2" [swal]="deleteSwal" (confirm)="delete(customer)">Sil</button>
               </td>
@@ -86,7 +91,7 @@
 
 
 <div class="modal fade" id="addModel" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Müşteri Ekle</h5>
@@ -117,7 +122,7 @@
 </div>
 
 <div class="modal fade" id="updateModel" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Müşteri Güncelle</h5>
@@ -144,7 +149,7 @@
 </div>
 
 <div class="modal fade" id="updatePasswordModel" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Müşteri Şifre Güncelle</h5>
@@ -161,6 +166,35 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="changePassowrd(password)">Müşteri Şifre Güncelle</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updatePasswordModelCloseBtn">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updateRelationshipModel" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Müşteri Bağlantı Güncelle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #updateForm="ngForm">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Fiyat Listesi</label>
+            <select class="form-control" [(ngModel)]="customer.priceListId" [ngModelOptions]="{standalone: true}" name="priceListId" #priceListId required>
+              <option [value]="priceList.id" *ngFor="let priceList of priceLists" [innerText]="priceList.name"></option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">İskonto Oranı</label>
+            <input type="text" class="form-control" [(ngModel)]="customer.discount" [ngModelOptions]="{standalone: true}" name="discount" #discount required>
+          </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" [disabled]="!updateForm.valid" (click)="updateReleationship()">Müşteri Bağlantı Güncelle</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updateRelationshipModelCloseBtn">Kapat</button>
       </div>
     </div>
   </div>

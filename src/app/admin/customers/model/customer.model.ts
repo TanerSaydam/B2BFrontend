@@ -5,4 +5,7 @@ export class CustomerModel{
   password: string;
   passwordHash: string;
   passwordSalt: string;
+  priceListId: number;
+  priceListName: string;
+  discount: number;
 }
