@@ -44,7 +44,6 @@ export class CustomersComponent implements OnInit {
   getList(){
     this.customerService.getList().subscribe((res: any)=>{
       this.customers = res.data;
-      console.log(res.data)
     },(err)=>{
       this.errorService.errorHandler(err);
     });

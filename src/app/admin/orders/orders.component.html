@@ -8,7 +8,6 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a routerLink="/admin">Ana Sayfa</a></li>
             <li class="breadcrumb-item active">Siparişler</li>
           </ol>
         </div>
@@ -84,22 +83,25 @@
               <td [innerText]="index + 1"></td>
               <td [innerText]="order.status"></td>
               <td [innerText]="order.date | date: 'dd.MM.yyyy'"></td>
-              <td [innerText]="order.orderNumber"></td>
+              <td>
+                <a [innerText]="order.orderNumber" routerLink="/admin/order-detail/{{ order.id }}" class="btn btn-default">
+                </a>
+              </td>
               <td [innerText]="order.customerName"></td>
               <td [innerText]="order.quantity"></td>
               <td [innerText]="order.total | currency: 'TRY':'symbol-narrow':'1.2-2'"></td>
               <td *ngIf="order.status == 'Reddedilen'"></td>
               <td *ngIf="order.status == 'Onay Bekliyor'">
                 <button class="btn btn-danger" (click)="update(order, 'Reddedilen')">Reddet</button>
-                <button class="btn btn-success" (click)="update(order, 'İşlemde')">İşleme Al</button>
+                <button class="btn btn-success mx-2" (click)="update(order, 'İşlemde')">İşleme Al</button>
               </td>
               <td *ngIf="order.status == 'İşlemde'">
                 <button class="btn btn-danger" (click)="update(order, 'Onay Bekliyor')">Onaya Geri Çek</button>
-                <button class="btn btn-primary" (click)="update(order, 'Sevke Hazır')">Sevke Hazır</button>
+                <button class="btn btn-primary mx-2" (click)="update(order, 'Sevke Hazır')">Sevke Hazır</button>
               </td>
               <td *ngIf="order.status == 'Sevke Hazır'">
                 <button class="btn btn-danger" (click)="update(order, 'İşlemde')">İşleme Geri Çek</button>
-                <button class="btn btn-info" (click)="update(order, 'Sevkiyatı Yapıldı')">Sevkiyatı Tamamla</button>
+                <button class="btn btn-info mx-2" (click)="update(order, 'Sevkiyatı Yapıldı')">Sevkiyatı Tamamla</button>
               </td>
               <td *ngIf="order.status == 'Sevkiyatı Yapıldı'">
                 <button class="btn btn-danger" (click)="update(order, 'Sevke Hazır')">Sevke Hazıra Geri Çek</button>

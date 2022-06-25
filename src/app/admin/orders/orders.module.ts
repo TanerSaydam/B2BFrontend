@@ -4,6 +4,7 @@ import { OrdersComponent } from './orders.component';
 import { RouterModule, Routes } from '@angular/router';
 import { OrderPipe } from './pipe/order.pipe';
 import { FormsModule } from '@angular/forms';
+import { OrderDetailModule } from './order-detail/order-detail.module';
 
 const routes: Routes = [
   {
@@ -20,10 +21,12 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    OrderDetailModule,
   ],
   exports: [
-    OrdersComponent
+    OrdersComponent,
+    OrderDetailModule,
   ]
 })
 export class OrdersModule { }

@@ -18,18 +18,8 @@ export class OrderService {
   }
 
   getById(id: number){
-    let api = this.apiUrl + "Orders/GetById/" + id;
+    let api = this.apiUrl + "Orders/GetByIdDto/" + id;
     return this.httpClient.get(api);
-  }
-
-  delete(order: OrderModel){
-    let api = this.apiUrl + "Orders/Delete";
-    return this.httpClient.post(api, order);
-  }
-
-  add(order: OrderModel){
-    let api = this.apiUrl + "Orders/Add";
-    return this.httpClient.post(api, order);
   }
 
   update(order: OrderModel){
