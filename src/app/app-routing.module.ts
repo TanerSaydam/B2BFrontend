@@ -9,6 +9,7 @@ import { ProductImagesComponent } from './admin/products/product-images/product-
 import { PriceListsComponent } from './admin/price-lists/price-lists.component';
 import { PriceListDetailComponent } from './admin/price-lists/price-list-detail/price-list-detail.component';
 import { CustomersComponent } from './admin/customers/customers.component';
+import { OrdersComponent } from './admin/orders/orders.component';
 
 const routes: Routes = [
   {
@@ -63,6 +64,16 @@ const routes: Routes = [
             path: '',
             component: CustomersComponent,
             loadChildren: ()=> import('./admin/customers/customers.module').then(m=> m.CustomersModule)
+          }
+        ]
+      },
+      {
+        path: 'orders',
+        children: [
+          {
+            path: '',
+            component: OrdersComponent,
+            loadChildren: ()=> import('./admin/orders/orders.module').then(m=> m.OrdersModule)
           }
         ]
       }

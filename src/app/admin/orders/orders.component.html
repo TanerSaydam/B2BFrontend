@@ -1,0 +1,114 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Siparişler</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a routerLink="/admin">Ana Sayfa</a></li>
+            <li class="breadcrumb-item active">Siparişler</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Siparişler</h3>
+
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-info mx-2" (click)="exportExcel()">Excel'e Aktar</button>
+          </div>
+          <div class="col-md-3">
+            <select name="status" (change)="getStatus($event)" [(ngModel)]="statusText" [ngModelOptions]="{standalone:true}" id="status" class="form-control">
+              <option value="Tümü">Tümü</option>
+              <option value="Reddedilen">Reddedilenler</option>
+              <option value="Onay Bekliyor">Onay Bekleyenler</option>
+              <option value="İşlemde">İşlemde Olanlar</option>
+              <option value="Sevke Hazır">Sevke Hazır Olanlar</option>
+              <option value="Sevkiyatı Yapıldı">Sevkiyatı Yapılanlar</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group offset-6">
+              <input
+                class="form-control"
+                type="search"
+                [(ngModel)]="filterText"
+                [ngModelOptions]="{standalone: true}"
+                placeholder="Aranacak kelime"
+                aria-label="Aranacak kelime">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <table class="table table-hovered" id="excel-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Sipariş Durumu</th>
+              <th>Tarih</th>
+              <th>Sipariş Numarası</th>
+              <th>Müşteri Adı</th>
+              <th>Sipariş Adedi</th>
+              <th>Toplam Tutar</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders
+            | orderPipe: statusText: filterText
+            let index = index">
+              <td [innerText]="index + 1"></td>
+              <td [innerText]="order.status"></td>
+              <td [innerText]="order.date | date: 'dd.MM.yyyy'"></td>
+              <td [innerText]="order.orderNumber"></td>
+              <td [innerText]="order.customerName"></td>
+              <td [innerText]="order.quantity"></td>
+              <td [innerText]="order.total | currency: 'TRY':'symbol-narrow':'1.2-2'"></td>
+              <td *ngIf="order.status == 'Reddedilen'"></td>
+              <td *ngIf="order.status == 'Onay Bekliyor'">
+                <button class="btn btn-danger" (click)="update(order, 'Reddedilen')">Reddet</button>
+                <button class="btn btn-success" (click)="update(order, 'İşlemde')">İşleme Al</button>
+              </td>
+              <td *ngIf="order.status == 'İşlemde'">
+                <button class="btn btn-danger" (click)="update(order, 'Onay Bekliyor')">Onaya Geri Çek</button>
+                <button class="btn btn-primary" (click)="update(order, 'Sevke Hazır')">Sevke Hazır</button>
+              </td>
+              <td *ngIf="order.status == 'Sevke Hazır'">
+                <button class="btn btn-danger" (click)="update(order, 'İşlemde')">İşleme Geri Çek</button>
+                <button class="btn btn-info" (click)="update(order, 'Sevkiyatı Yapıldı')">Sevkiyatı Tamamla</button>
+              </td>
+              <td *ngIf="order.status == 'Sevkiyatı Yapıldı'">
+                <button class="btn btn-danger" (click)="update(order, 'Sevke Hazır')">Sevke Hazıra Geri Çek</button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
