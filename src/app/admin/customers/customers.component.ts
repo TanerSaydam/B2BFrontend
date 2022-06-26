@@ -21,7 +21,7 @@ export class CustomersComponent implements OnInit {
   customer: CustomerModel = new CustomerModel();
 
   filterText: string = "";
-
+  newPassword: string = "";
   constructor(
     private customerService: CustomerService,
     private errorService: ErrorService,
@@ -115,10 +115,10 @@ export class CustomersComponent implements OnInit {
     });
   }
 
-  changePassowrd(password: any){
+  changePassowrd(){
     let customer = new CustomerModel();
     customer.id = this.customer.id;
-    customer.password = password.value;
+    customer.password = this.newPassword;
 
     this.customerService.changePasswordByAdminPanel(customer).subscribe((res: any)=>{
       this.toastr.info(res.message);

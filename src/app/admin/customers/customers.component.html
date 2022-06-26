@@ -8,7 +8,7 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a routerLink="/admin">Ana Sayfa</a></li>
+            <li class="breadcrumb-item"><a routerLink="/">Ana Sayfa</a></li>
             <li class="breadcrumb-item active">Müşteriler</li>
           </ol>
         </div>
@@ -155,19 +155,19 @@
         <h5 class="modal-title" id="exampleModalLabel">Müşteri Şifre Güncelle</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <form #updateForm="ngForm">
       <div class="modal-body">
-        <form #updateForm="ngForm">
           <div class="form-group">
             <label for="exampleInputEmail1">Şifre</label>
-            <input type="password" class="form-control" ngModel name="password" #password required>
+            <input type="password" class="form-control" [(ngModel)]="newPassword" [ngModelOptions]="{standalone: true}" name="password" #password required>
           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="changePassowrd()">Müşteri Şifre Güncelle</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updatePasswordModelCloseBtn">Kapat</button>
+        </div>
       </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="changePassowrd(password)">Müşteri Şifre Güncelle</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updatePasswordModelCloseBtn">Kapat</button>
-      </div>
-    </div>
   </div>
 </div>
 

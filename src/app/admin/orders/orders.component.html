@@ -84,7 +84,7 @@
               <td [innerText]="order.status"></td>
               <td [innerText]="order.date | date: 'dd.MM.yyyy'"></td>
               <td>
-                <a [innerText]="order.orderNumber" routerLink="/admin/order-detail/{{ order.id }}" class="btn btn-default">
+                <a [innerText]="order.orderNumber" routerLink="/order-detail/{{ order.id }}" class="btn btn-default">
                 </a>
               </td>
               <td [innerText]="order.customerName"></td>
