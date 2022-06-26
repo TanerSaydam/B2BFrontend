@@ -27,6 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   ],
   providers: [
     { provide: 'apiUrl', useValue:'https://localhost:7146/api/'},
+    //{ provide: 'apiUrl', useValue:'https://b2b.api.ecnorow.com/api/'},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
